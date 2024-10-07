@@ -48,3 +48,33 @@ def train_knn_with_prototypes(prototypes, class_names, train_features, train_lab
     print(f"Time taken to score the model: {end_time_score - start_time_score:.4f} seconds")
 
     return knn
+
+
+def train_knn_with_prototypes_protonet(prototypes, class_names, train_features, train_labels, val_features, val_labels, n_neighbors=5):
+    # Use prototypes as "centroids" for KNN
+    proto_features = []
+    proto_labels = []
+
+    for class_name, proto in prototypes.items():
+        proto_features.append(proto)
+        proto_labels.append(class_names.index(class_name))
+
+    proto_features = np.array(proto_features)
+    proto_labels = np.array(proto_labels)
+
+    # Train KNN
+    knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+
+    start_time_fit = time.time()
+    knn.fit(proto_features, proto_labels)
+    end_time_fit = time.time()
+
+    start_time_score = time.time()
+    accuracy = knn.score(val_features, val_labels)
+    end_time_score = time.time()
+
+    print(f"KNN Classifier with Prototypes Accuracy: {accuracy * 100:.2f}%")
+    print(f"Time taken to fit the model: {end_time_fit - start_time_fit:.4f} seconds")
+    print(f"Time taken to score the model: {end_time_score - start_time_score:.4f} seconds")
+    
+    return knn

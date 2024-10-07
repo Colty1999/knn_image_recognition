@@ -26,7 +26,6 @@ n_support = 5  # Number of support examples per class
 def initialize_model():
     # Load ResNet50 without final FC layer to use as a feature extractor
     model = models.resnet50(pretrained=True)
-    num_ftrs = model.fc.in_features
     # model.fc = nn.Identity()  # Remove the classification head to use the embeddings
     # model.fc = nn.Linear(num_ftrs, num_classes)
     model.fc = nn.Identity() 
