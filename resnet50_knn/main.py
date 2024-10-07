@@ -5,8 +5,7 @@ import torch.nn as nn
 from torchvision import models
 from plots import visualize_tsne_with_classified_images, visualize_tsne_with_classified_images_with_prototypes
 from helpers import load_data, extract_features
-from protonet.protonet import ProtoNet
-from prototypes import create_prototypes_mean, create_prototypes_protonet
+from prototypes import create_prototypes_mean
 from knn import train_knn, train_knn_with_prototypes
 
 load_dotenv()
@@ -48,14 +47,7 @@ if __name__ == '__main__':
         classified_labels = knn.predict(val_features)
         visualize_tsne_with_classified_images_with_prototypes(prototypes, val_features, classified_labels, class_names)
     elif (prototyping == "Protonet"):
-        protonet_model_path = os.getenv('PROTONET_MODEL_PATH')
-        proto_model = ProtoNet(x_dim=2048, hid_dim=64, z_dim=64)
-        proto_model.load_state_dict(torch.load(protonet_model_path))
-        proto_model = proto_model.to(device)
-        prototypes = create_prototypes_protonet(model, proto_model, dataloaders['train'], class_names)
-        knn = train_knn_with_prototypes(prototypes, class_names, train_features, train_labels, val_features, val_labels, n_neighbors=1)
-        classified_labels = knn.predict(val_features)
-        visualize_tsne_with_classified_images_with_prototypes(prototypes, val_features, classified_labels, class_names)
+        pass
     else:
         knn = train_knn(train_features, train_labels, val_features, val_labels, n_neighbors=5)
         classified_labels = knn.predict(val_features)

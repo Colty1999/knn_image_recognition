@@ -1,6 +1,7 @@
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
 
 
 # Function to visualize t-SNE for prototypes only
@@ -79,6 +80,24 @@ def plot_accuracy(history_df):
     plt.show()
 
 
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.manifold import TSNE
+
+def save_plot_to_directory(filename, directory="plots"):
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Construct the full path for the file
+    full_path = os.path.join(directory, filename)
+
+    # Save the plot to the specified directory
+    plt.savefig(full_path)
+    print(f"Plot saved to {full_path}")
+
+
 def visualize_tsne_with_classified_images(new_features, new_labels, class_names):
     # Perform t-SNE transformation only on the new features
     tsne = TSNE(n_components=2, random_state=42)
@@ -101,6 +120,10 @@ def visualize_tsne_with_classified_images(new_features, new_labels, class_names)
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
 
     plt.title("t-SNE of Classified Images")
+
+    # Save plot if requested
+    save_plot_to_directory(f"tsne_classified_images.png{datetime.now().strftime("%Y%m%d-%H%M%S")}.png")
+
     plt.show()
 
 
@@ -160,4 +183,8 @@ def visualize_tsne_with_classified_images_with_prototypes(prototypes, new_featur
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
 
     plt.title("t-SNE of Prototypes and Classified Images")
+
+    # Save plot if requested
+    save_plot_to_directory(f"tsne_classified_images_with_prototypes.png{datetime.now().strftime("%Y%m%d-%H%M%S")}.png")
+
     plt.show()
