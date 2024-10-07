@@ -28,3 +28,17 @@ def create_prototypes_mean(model, dataloader, class_names):
         json.dump(prototypes_to_save, f)
 
     return prototypes
+
+
+def find_closest_image_to_prototype(prototype, features, image_paths):
+    """
+    Find the image that is closest to the given prototype.
+
+    :param prototype: The mean prototype of a class.
+    :param features: The extracted features of all images.
+    :param image_paths: List of paths of the images in the dataset.
+    :return: Path of the image that is closest to the prototype.
+    """
+    distances = np.linalg.norm(features - prototype, axis=1)
+    closest_index = np.argmin(distances)
+    return image_paths[closest_index]

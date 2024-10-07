@@ -50,6 +50,11 @@ def extract_features(model, dataloader):
     model.eval()
     features = []
     labels = []
+    image_paths = []
+
+    # Access the underlying dataset
+    base_dataset = dataloader.dataset.dataset  # Access the original ImageFolder dataset
+    subset_indices = dataloader.dataset.indices  # Get the indices of the Subset
 
     with torch.no_grad():
         for inputs, lbls in dataloader:
@@ -60,7 +65,10 @@ def extract_features(model, dataloader):
             features.append(outputs.cpu().numpy())
             labels.append(lbls.cpu().numpy())
 
+            # Retrieve the image paths based on the subset indices
+            image_paths.extend([base_dataset.samples[i][0] for i in subset_indices])
+
     features = np.vstack(features)
     labels = np.hstack(labels)
 
-    return features, labels
+    return features, labels, image_paths
