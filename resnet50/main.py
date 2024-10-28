@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from torchvision import models
 from plots import visualize_tsne_with_classified_images, visualize_tsne_with_classified_images_with_prototypes
-from helpers import load_data, extract_features
+from helpers import load_data, extract_features, find_prototypical_images_paths
 from prototypes import create_prototypes_mean
 from knn import train_knn, train_knn_with_prototypes
 
@@ -35,19 +35,21 @@ if __name__ == '__main__':
     model = load_trained_model(model_path, num_classes=len(class_names))
 
 
-    train_features, train_labels = extract_features(model, dataloaders['train'])
-    val_features, val_labels = extract_features(model, dataloaders['val'])
+    train_features, train_labels, train_image_paths  = extract_features(model, dataloaders['train'])
+    val_features, val_labels, val_image_paths = extract_features(model, dataloaders['val'])
 
-    # ["None", "Mean", "Protonet"]
-    prototyping = "None"
+    # ["None", "Mean"]
+    prototyping = "Mean"
     if (prototyping == "Mean"):
         prototypes = create_prototypes_mean(model, dataloaders['train'], class_names)
 
         knn = train_knn_with_prototypes(prototypes, class_names, train_features, train_labels, val_features, val_labels, n_neighbors=1)
         classified_labels = knn.predict(val_features)
+
+        if (False):  # SAve csv with class prototypes paths
+            find_prototypical_images_paths(prototypes, class_names, train_features, classified_labels, val_features, val_image_paths)
+
         visualize_tsne_with_classified_images_with_prototypes(prototypes, val_features, classified_labels, class_names)
-    elif (prototyping == "Protonet"):
-        pass
     else:
         knn = train_knn(train_features, train_labels, val_features, val_labels, n_neighbors=5)
         classified_labels = knn.predict(val_features)
