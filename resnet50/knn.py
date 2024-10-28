@@ -36,13 +36,7 @@ def train_knn_with_prototypes(prototypes, class_names, train_features, train_lab
     start_time_score = time.time()
     accuracy = knn.score(val_features, val_labels)
     end_time_score = time.time()
-
-    # predicted_labels = knn.predict(val_features)
-    # label_counts = Counter(predicted_labels)
-    # print("\nClassified images per class:")
-    # for class_label, count in label_counts.items():
-    #     print(f"Class {class_label}: {count} images")
-
+    
     print(f"KNN Classifier with Prototypes Accuracy: {accuracy * 100:.2f}%")
     print(f"Time taken to fit the model: {end_time_fit - start_time_fit:.4f} seconds")
     print(f"Time taken to score the model: {end_time_score - start_time_score:.4f} seconds")
