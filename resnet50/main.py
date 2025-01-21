@@ -23,6 +23,7 @@ def load_trained_model(model_path, num_classes):
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, num_classes)
     model.load_state_dict(torch.load(model_path))
+    model = nn.Sequential(*list(model.children())[:-1]) 
     model = model.to(device)
     model.eval()
     return model

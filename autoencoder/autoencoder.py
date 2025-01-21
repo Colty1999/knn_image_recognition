@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class MushroomAutoencoder(nn.Module):
-    def __init__(self, input_channels=3, latent_dim=256, image_size=256):
+    def __init__(self, input_channels=3, latent_dim=2048, image_size=256):
         super(MushroomAutoencoder, self).__init__()
 
         self.latent_dim = latent_dim

@@ -1,3 +1,4 @@
+import os
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import numpy as np
@@ -67,8 +68,21 @@ def plot_tsne_with_prototypes(features, labels, prototypes, class_names, perplex
     plt.show()
 
 
-# Plot accuracy over epochs
+# # Plot accuracy over epochs
+# def plot_accuracy(history_df):
+#     plt.figure(figsize=(10, 5))
+#     plt.plot(history_df['epoch'], history_df['train_acc'], label='Train Accuracy')
+#     plt.plot(history_df['epoch'], history_df['val_acc'], label='Validation Accuracy')
+#     plt.title('Model Accuracy Over Epochs')
+#     plt.xlabel('Epoch')
+#     plt.ylabel('Accuracy')
+#     plt.legend()
+#     plt.grid(True)
+#     plt.show()
+
+# Plot accuracy over epochs and save the plot
 def plot_accuracy(history_df):
+    os.makedirs('plots', exist_ok=True)  # Ensure the plots directory exists
     plt.figure(figsize=(10, 5))
     plt.plot(history_df['epoch'], history_df['train_acc'], label='Train Accuracy')
     plt.plot(history_df['epoch'], history_df['val_acc'], label='Validation Accuracy')
@@ -77,8 +91,26 @@ def plot_accuracy(history_df):
     plt.ylabel('Accuracy')
     plt.legend()
     plt.grid(True)
+    plot_path = os.path.join('plots', 'accuracy_plot.png')
+    plt.savefig(plot_path)  # Save the plot
     plt.show()
+    print(f"Accuracy plot saved to {plot_path}")
 
+# Plot loss over epochs and save the plot
+def plot_loss(history_df):
+    os.makedirs('plots', exist_ok=True)  # Ensure the plots directory exists
+    plt.figure(figsize=(10, 5))
+    plt.plot(history_df['epoch'], history_df['train_loss'], label='Train Loss')
+    plt.plot(history_df['epoch'], history_df['val_loss'], label='Validation Loss')
+    plt.title('Model Loss Over Epochs')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.grid(True)
+    plot_path = os.path.join('plots', 'loss_plot.png')
+    plt.savefig(plot_path)  # Save the plot
+    plt.show()
+    print(f"Loss plot saved to {plot_path}")
 
 import os
 import matplotlib.pyplot as plt
@@ -122,7 +154,7 @@ def visualize_tsne_with_classified_images(new_features, new_labels, class_names)
     plt.title("t-SNE of Classified Images")
 
     # Save plot if requested
-    save_plot_to_directory(f"tsne_classified_images.png{datetime.now().strftime("%Y%m%d-%H%M%S")}.png")
+    save_plot_to_directory(f"resnet50_tsne_classified_images{datetime.now().strftime("%Y%m%d-%H%M%S")}.png")
 
     plt.show()
 
@@ -185,6 +217,6 @@ def visualize_tsne_with_classified_images_with_prototypes(prototypes, new_featur
     plt.title("t-SNE of Prototypes and Classified Images")
 
     # Save plot if requested
-    save_plot_to_directory(f"tsne_classified_images_with_prototypes.png{datetime.now().strftime("%Y%m%d-%H%M%S")}.png")
+    save_plot_to_directory(f"resnet50_tsne_classified_images_with_prototypes{datetime.now().strftime("%Y%m%d-%H%M%S")}.png")
 
     plt.show()

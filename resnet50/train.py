@@ -6,7 +6,7 @@ import torch.optim as optim
 from torchvision import models
 from tqdm import tqdm
 import pandas as pd
-from plots import plot_accuracy
+from plots import plot_accuracy, plot_loss
 from helpers import load_data
 
 load_dotenv()
@@ -90,8 +90,6 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epo
         history['val_loss'].append(epoch_val_loss)
         history['val_acc'].append(epoch_val_corrects.item())
 
-        print()
-
     # Convert history into DataFrame for easier handling
     history_df = pd.DataFrame(history)
     print(history_df)  # Print the table of accuracies and losses
@@ -111,5 +109,14 @@ if __name__ == '__main__':
 
     # Step 5: Plot accuracy over epochs
     plot_accuracy(history_df)
+
+    # Plot loss over epochs
+    plot_loss(history_df)
+
+    # Save the history DataFrame to a CSV file
+    os.makedirs('plots', exist_ok=True)  # Ensure the plots directory exists
+    history_csv_path = os.path.join('plots', 'training_history.csv')
+    history_df.to_csv(history_csv_path, index=False)
+    print(f"Training history saved to {history_csv_path}")
 
     torch.save(model.state_dict(), os.getenv('MODEL_PATH'))
